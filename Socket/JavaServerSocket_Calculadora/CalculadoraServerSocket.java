@@ -19,23 +19,39 @@ public class CalculadoraServerSocket {
 	    Calculadora calc = new Calculadora();
 		try {
 			welcomeSocket = new ServerSocket(9090);
-		  int i=0; //número de clientes
+		  int i=0; //numero de clientes
 	  
 	      System.out.println ("Servidor no ar");
 	      while(true) { 
 	  
 	           Socket connectionSocket = welcomeSocket.accept(); 
 	           i++;
-	           System.out.println ("Nova conexão");
+	           System.out.println ("Nova conexï¿½o");
 	           
-	           //Interpretando dados do servidor
+	           // Interpretando dados do servidor
 	           socketEntrada = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                String operacao= socketEntrada.readLine();
                String oper1=socketEntrada.readLine();
                String oper2=socketEntrada.readLine();
                
-               //Chamando a calculadora
-               String result= ""+calc.soma(Double.parseDouble(oper1),Double.parseDouble(oper2));
+               // Chamando a calculadora
+			 	String result= "";
+			   switch (operacao) {
+				case "+":
+					result += calc.soma(Double.parseDouble(oper1),Double.parseDouble(oper2)); 	
+					break;
+				case "-":
+					result += calc.subtracao(Double.parseDouble(oper1),Double.parseDouble(oper2)); 	
+					break;
+				case "/":
+					result += calc.divisao(Double.parseDouble(oper1),Double.parseDouble(oper2)); 	
+					break;
+				case "*":
+					result += calc.multiplicacao(Double.parseDouble(oper1),Double.parseDouble(oper2)); 	
+					break;					
+				default:
+					break;
+			   }
                
                //Enviando dados para o servidor
                socketOutput= new DataOutputStream(connectionSocket.getOutputStream());     	
@@ -47,7 +63,6 @@ public class CalculadoraServerSocket {
 	                    
 	      }
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	    

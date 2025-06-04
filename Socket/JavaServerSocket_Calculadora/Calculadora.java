@@ -5,4 +5,16 @@ public class Calculadora {
     public double soma(double oper1, double oper2) {
         return oper1 + oper2;
     }
+    public double subtracao(double oper1, double oper2) {
+        return oper1 - oper2;
+    }
+    public double divisao(double oper1, double oper2) {
+        if(oper2 != 0){
+            return oper1 / oper2;
+        }
+        return -1;
+    }
+    public double multiplicacao(double oper1, double oper2) {
+        return oper1 * oper2;
+    }
 }
