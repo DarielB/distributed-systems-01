@@ -7,11 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class CalculadoraServerSocket {
-
-	
-
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		ServerSocket welcomeSocket;
 		DataOutputStream socketOutput;     	
 	    DataInputStream socketInput;
@@ -23,17 +19,16 @@ public class CalculadoraServerSocket {
 	  
 	      System.out.println ("Servidor no ar");
 	      while(true) { 
-	  
 	           Socket connectionSocket = welcomeSocket.accept(); 
 	           i++;
 	           System.out.println ("Nova conex�o");
-	           
+
 	           // Interpretando dados do servidor
 	           socketEntrada = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                String operacao= socketEntrada.readLine();
                String oper1=socketEntrada.readLine();
                String oper2=socketEntrada.readLine();
-               
+
                // Chamando a calculadora
 			 	String result= "";
 			   switch (operacao) {
@@ -52,20 +47,18 @@ public class CalculadoraServerSocket {
 				default:
 					break;
 			   }
-               
+
                //Enviando dados para o servidor
-               socketOutput= new DataOutputStream(connectionSocket.getOutputStream());     	
+               socketOutput= new DataOutputStream(connectionSocket.getOutputStream());
 	           socketOutput.writeBytes(result+ '\n');
-	           System.out.println (result);	           
+	           System.out.println (result);  
 	           socketOutput.flush();
 	           socketOutput.close();
 
-	                    
 	      }
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
-	    
-	}
+		}
 
+	}
 }
