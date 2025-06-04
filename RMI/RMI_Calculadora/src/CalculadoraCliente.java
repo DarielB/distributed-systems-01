@@ -5,7 +5,7 @@ import java.rmi.registry.Registry;
 import java.util.Stack;
 
 // Campos da interface gráfica
-public class CalculadoraClienteRMI extends JFrame {
+public class CalculadoraCliente extends JFrame {
 
     // Campos da interface gráfica
     private JTextField campoExpressao;
@@ -14,7 +14,7 @@ public class CalculadoraClienteRMI extends JFrame {
     private ICalculadora calculadora;
 
     // Construtor da classe
-    public CalculadoraClienteRMI() {
+    public CalculadoraCliente() {
         super("Calculadora RMI");
 
         try {
@@ -149,6 +149,6 @@ public class CalculadoraClienteRMI extends JFrame {
 
     // Método principal que inicializa a aplicação na thread da interface gráfica
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(CalculadoraClienteRMI::new);
+        SwingUtilities.invokeLater(CalculadoraCliente::new);
     }
 }
