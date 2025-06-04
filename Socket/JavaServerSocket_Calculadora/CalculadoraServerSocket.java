@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,7 +9,6 @@ public class CalculadoraServerSocket {
 	public static void main(String[] args) {
 		ServerSocket welcomeSocket;
 		DataOutputStream socketOutput;     	
-	    DataInputStream socketInput;
 	    BufferedReader socketEntrada;
 	    Calculadora calc = new Calculadora();
 		try {
