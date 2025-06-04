@@ -21,7 +21,7 @@ public class CalculadoraServerSocket {
 	      while(true) { 
 	           Socket connectionSocket = welcomeSocket.accept(); 
 	           i++;
-	           System.out.println ("Nova conex�o");
+	           System.out.println ("Nova conexao");
 
 	           // Interpretando dados do servidor
 	           socketEntrada = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
@@ -54,7 +54,6 @@ public class CalculadoraServerSocket {
 	           System.out.println (result);  
 	           socketOutput.flush();
 	           socketOutput.close();
-
 	      }
 		} catch (IOException e) {
 			e.printStackTrace();
