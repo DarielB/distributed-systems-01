@@ -172,36 +172,73 @@ public class CalculadoraClienteHTTP extends JFrame {
     }
 
     // Envia uma requisição HTTP POST ao servidor PHP e retorna o JSON de resposta
-    private String enviarRequisicaoHTTP(double oper1, double oper2, int operacao) throws IOException {
-        URL url = new URL("http://127.0.0.1:9000/PHPServerHTTP_Calculadora.php"); // URL do servidor
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(10000);  // Tempo máximo de leitura
-        conn.setConnectTimeout(15000); // Tempo máximo para conexão
-        conn.setRequestMethod("POST");
-        conn.setDoInput(true);  // Habilita entrada
-        conn.setDoOutput(true); // Habilita envio de dados
+private String enviarRequisicaoHTTP(double oper1, double oper2, int operacao) throws IOException {
+    int tentativas = 0; // Contador de tentativas
+    int maxTentativas = 3; // Número máximo de tentativas
+    long espera = 5000; // Tempo de espera entre tentativas (em milissegundos)
 
-        // Envia os dados via POST
-        OutputStream os = conn.getOutputStream();
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-        String dados = "oper1=" + oper1 + "&oper2=" + oper2 + "&operacao=" + operacao;
-        writer.write(dados);
-        writer.flush();
-        writer.close();
-        os.close();
+    while (tentativas < maxTentativas) { // Enquanto não atingir o máximo de tentativas
+        try {
+            // Criação da URL do servidor PHP
+            URL url = new URL("http://127.0.0.1:9000/PHPServerHTTP_Calculadora.php");
 
-        // Verifica se a resposta foi OK (HTTP 200)
-        int responseCode = conn.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-            StringBuilder response = new StringBuilder();
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                response.append(linha.trim()); // Monta a resposta
+            // Abre conexão HTTP
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            // Define tempo de leitura e conexão
+            conn.setReadTimeout(10000); // em milissegundos
+            conn.setConnectTimeout(15000); // em milissegundos
+
+            // Define método e permissões
+            conn.setRequestMethod("POST"); // Método POST
+            conn.setDoInput(true); // Permite entrada de dados
+            conn.setDoOutput(true); // Permite saída de dados
+
+            // Prepara os dados da requisição
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            String dados = "oper1=" + oper1 + "&oper2=" + oper2 + "&operacao=" + operacao;
+            writer.write(dados);
+            writer.flush();
+            writer.close();
+            os.close();
+
+            // Obtém código de resposta do servidor
+            int responseCode = conn.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Lê resposta do servidor
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                StringBuilder response = new StringBuilder();
+                String linha;
+                while ((linha = br.readLine()) != null) {
+                    response.append(linha.trim()); // Monta a resposta completa
+                }
+                return response.toString(); // Retorna resposta JSON como string
+            } else {
+                // Lança exceção se resposta não for OK
+                throw new IOException("Erro HTTP: código " + responseCode);
             }
-            return response.toString(); // Retorna JSON
-        } else {
-            throw new IOException("Erro HTTP: código " + responseCode); // Trata erro HTTP
+
+        } catch (IOException e) {
+            // Em caso de erro, incrementa tentativas
+            tentativas++;
+
+            if (tentativas >= maxTentativas) {
+                throw new IOException("Falha após " + maxTentativas + " tentativas: " + e.getMessage(), e);
+            }
+
+            // Espera antes de tentar novamente
+            try {
+                System.out.println("Tentativa " + tentativas + " falhou. Aguardando 5 segundos para tentar novamente...");
+                Thread.sleep(espera); // Aguarda 5 segundos
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt(); // Restaura estado de interrupção da thread
+                throw new IOException("Retry interrompido", ie);
+            }
         }
     }
+    // Fallback final, não deve ser alcançado
+    throw new IOException("Erro desconhecido.");
+}
 }
