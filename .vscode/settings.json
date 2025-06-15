@@ -1,7 +1,0 @@
-{
-    "java.project.sourcePaths": [
-        "Socket/JavaServerSocket_Calculadora",
-        "Socket/JavaClientSocket_Calculadora/src",
-        "HTTP/JavaClientHTTP_Calculadora/src",
-    ]
-}
