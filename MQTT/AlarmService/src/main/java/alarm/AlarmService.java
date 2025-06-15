@@ -14,6 +14,7 @@ public class AlarmService {
 	private static final String appConfigPath = "./src/main/resources/application.properties";
 	
 	public static void main(String[] args) throws MqttException {
+		MqttClient client;
 		try {
 			// Configurações do broker MQTT e tópico de alertas
 			Properties appProps = new Properties();
@@ -23,7 +24,7 @@ public class AlarmService {
 			String ALERT_TOPIC = appProps.getProperty("ALERT_TOPIC");
 			
 			// Cria o cliente MQTT com ID único
-			MqttClient client = new MqttClient(BROKER, CLIENT_ID);
+			client = new MqttClient(BROKER, CLIENT_ID);
 
 			// Configura opções de conexão MQTT
 			MqttConnectOptions options = new MqttConnectOptions();
